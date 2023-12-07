@@ -27,12 +27,23 @@ impl ResourceMap {
     }
 
     fn process_seed(&self, seed: usize) -> usize {
-        match self.mappings.binary_search_by_key(&seed, |r| r.source_start) {
-            Ok(idx) => self.mappings.get(idx).and_then(|r| r.process_seed(seed)).unwrap(),
+        match self
+            .mappings
+            .binary_search_by_key(&seed, |r| r.source_start)
+        {
+            Ok(idx) => self
+                .mappings
+                .get(idx)
+                .and_then(|r| r.process_seed(seed))
+                .unwrap(),
             Err(idx) => match idx > 0 {
-                true => self.mappings.get(idx - 1).and_then(|r| r.process_seed(seed)).unwrap_or(seed),
+                true => self
+                    .mappings
+                    .get(idx - 1)
+                    .and_then(|r| r.process_seed(seed))
+                    .unwrap_or(seed),
                 false => seed,
-            }
+            },
         }
     }
 }
@@ -97,7 +108,7 @@ fn part_2(input: &str) -> usize {
     let mut min_loc = usize::MAX;
     for pair in almanac.seeds.chunks_exact(2) {
         let [seed, range] = pair else { panic!() };
-        for seed in *seed..*seed+*range {
+        for seed in *seed..*seed + *range {
             min_loc = min(min_loc, almanac.process_seed(seed));
         }
     }
